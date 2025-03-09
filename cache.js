@@ -7,7 +7,7 @@ class CacheServer {
     this.origin = origin;
     this.redisClient = redisClient;
     this.app = express();
-    this.ttl = 30;
+    this.ttl = 3000;
   }
 
   async handleRequest(req, res) {
