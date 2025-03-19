@@ -25,3 +25,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Print inputs
+        run: |
+          echo "runRspec: ${{ github.event.inputs.runRspec }}"
+          echo "runContainerScan: ${{ github.event.inputs.runContainerScan }}"
