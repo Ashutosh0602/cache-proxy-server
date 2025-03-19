@@ -5,19 +5,19 @@ on:
     branches:
       - main
 
-#   workflow_dispatch:
-#     inputs:
-#       runRspec:
-#         description: "Force Rspec run"
-#         required: true
-#         default: true
-#         type: boolean
+  workflow_dispatch:
+    inputs:
+      runRspec:
+        description: "Force Rspec run"
+        required: true
+        default: true
+        type: boolean
 
-#       runContainerScan:
-#         description: "Force Container Scan"
-#         required: true
-#         default: true
-#         type: boolean
+      runContainerScan:
+        description: "Force Container Scan"
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   test:
