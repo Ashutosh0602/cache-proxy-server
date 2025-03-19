@@ -22,6 +22,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      RUN_RSPEC: true
+      RUN_CONTAINER_SCAN: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,3 +32,5 @@ jobs:
         run: |
           echo "runRspec: ${{ github.event.inputs.runRspec }}"
           echo "runContainerScan: ${{ github.event.inputs.runContainerScan }}"
+          echo "RUN_RSPEC: ${{ env.RUN_RSPEC }}"
+          echo "RUN_CONTAINER_SCAN: ${{ env.RUN_CONTAINER_SCAN }}"
