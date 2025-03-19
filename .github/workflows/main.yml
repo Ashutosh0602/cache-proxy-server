@@ -1,0 +1,23 @@
+name: Basic
+
+on:
+  workflow_dispatch:
+    inputs:
+      runRspec:
+        description: "Force Rspec run"
+        required: true
+        default: true
+        type: boolean
+
+      runContainerScan:
+        description: "Force Container Scan"
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
