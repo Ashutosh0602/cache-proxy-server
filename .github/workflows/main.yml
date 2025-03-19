@@ -23,7 +23,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      RUN_RSPEC: ${{ github.event.inputs.runRspec || false }}
+      RUN_RSPEC: ${{ github.event.inputs.runRspec || true }}
       RUN_CONTAINER_SCAN: ${{ github.event.inputs.runContainerScan || true}}
     steps:
       - name: Checkout code
