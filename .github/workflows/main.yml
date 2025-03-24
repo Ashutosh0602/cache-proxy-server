@@ -23,14 +23,47 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      RUN_RSPEC: ${{ github.event.inputs.runRspec || true }}
-      RUN_CONTAINER_SCAN: ${{ github.event.inputs.runContainerScan || true}}
+      RUN_RSPEC: ${{ github.event.inputs.runRspec != true }}
+      RUN_CONTAINER_SCAN: ${{ github.event.inputs.runContainerScan || true }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Print all inputs
         run: |
           echo "runRspec: ${{ github.event.inputs.runRspec }}"
           echo "runContainerScan: ${{ github.event.inputs.runContainerScan }}"
           echo "RUN_RSPEC: ${{ env.RUN_RSPEC }}"
           echo "RUN_CONTAINER_SCAN: ${{ env.RUN_CONTAINER_SCAN }}"
+
+      - name: Simulating a Long Task (RSpec Tests)
+        if: env.RUN_RSPEC == 'false'
+        run: |
+          echo "Starting RSpec tests..."
+          sleep 30
+          echo "RSpec tests completed!"
+
+      - name: Simulating a Container Scan
+        if: env.RUN_CONTAINER_SCAN == 'true'
+        run: |
+          echo "Starting container scan..."
+          sleep 20
+          echo "Container scan completed!"
+
+  long-running-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Simulating a Long Build Process
+        run: |
+          echo "Starting build process..."
+          sleep 25
+          echo "Build completed!"
+
+      - name: Simulating a Security Scan
+        run: |
+          echo "Starting security scan..."
+          sleep 15
+          echo "Security scan completed!"
