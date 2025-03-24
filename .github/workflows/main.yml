@@ -17,7 +17,7 @@ on:
 
 jobs:
   test:
-    runs-on: test-action
+    runs-on: test-2
     env:
       RUN_RSPEC: ${{ github.event.inputs.runRspec != true }}
       RUN_CONTAINER_SCAN: ${{ github.event.inputs.runContainerScan || true }}
