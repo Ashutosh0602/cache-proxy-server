@@ -47,7 +47,7 @@ jobs:
           echo "Container scan completed!"
 
   long-running-task:
-    runs-on: [self-hosted, test-3]
+    runs-on: [self-hosted, test-2]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
