@@ -1,6 +1,9 @@
 name: Parallel Execution Example
 
 on:
+  push:
+    branches:
+      - "**"
   workflow_dispatch:
     inputs:
       runRspec:
