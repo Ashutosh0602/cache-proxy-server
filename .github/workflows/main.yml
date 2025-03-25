@@ -25,6 +25,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Print current user
+        run: whoami
+
       - name: Print all inputs
         run: |
           echo "runRspec: ${{ github.event.inputs.runRspec }}"
