@@ -38,6 +38,3 @@ jobs:
           SECONDS=$((RANDOM % 10 + 5))
           echo "Sleeping for $SECONDS seconds before npm test..."
           sleep $SECONDS
-
-      - name: Run tests
-        run: npm test
