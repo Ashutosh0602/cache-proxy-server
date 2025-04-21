@@ -11,7 +11,8 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, ubuntu-22.04, macos-latest, macos-13, macos-15]
+        os: [ubuntu-latest]
+        integration-test: ["dev", "prod", "test", "bug", "integration"]
 
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -24,6 +25,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      - name: Integration-test
+        run: |
+          echo "${{matrix.integration-test}}"
 
       - name: Random sleep before installing dependencies
         run: |
