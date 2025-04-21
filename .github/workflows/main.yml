@@ -1,19 +1,42 @@
+name: CI on Multiple OS
+
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - "**"
 
 jobs:
-  get_caller_identity:
-    name: Get Caller Identity
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHub_Actions_Role
-          aws-region: us-west-2
-      - name: Fetch the caller identity
+          node-version: 18
+
+      - name: Random sleep before installing dependencies
         run: |
-          aws sts get-caller-identity
+          SECONDS=$((RANDOM % 10 + 5))  # Sleep between 5 and 15 seconds
+          echo "Sleeping for $SECONDS seconds before npm ci..."
+          sleep $SECONDS
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Random sleep before tests
+        run: |
+          SECONDS=$((RANDOM % 10 + 5))  # Sleep between 5 and 15 seconds
+          echo "Sleeping for $SECONDS seconds before npm test..."
+          sleep $SECONDS
+
+      - name: Run tests
+        run: npm test
