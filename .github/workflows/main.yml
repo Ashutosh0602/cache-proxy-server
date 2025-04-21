@@ -9,7 +9,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, test-env, prod-env, deploy-env]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
