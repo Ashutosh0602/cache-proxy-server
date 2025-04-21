@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [self-hosted]
         integration-test: ["dev", "prod", "test", "bug", "integration"]
 
     name: Test on ${{ matrix.os }}
