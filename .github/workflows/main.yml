@@ -8,6 +8,7 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
@@ -25,7 +26,7 @@ jobs:
 
       - name: Random sleep before installing dependencies
         run: |
-          SECONDS=$((RANDOM % 10 + 5))  # Sleep between 5 and 15 seconds
+          SECONDS=$((RANDOM % 10 + 5))
           echo "Sleeping for $SECONDS seconds before npm ci..."
           sleep $SECONDS
 
@@ -34,6 +35,9 @@ jobs:
 
       - name: Random sleep before tests
         run: |
-          SECONDS=$((RANDOM % 10 + 5))  # Sleep between 5 and 15 seconds
+          SECONDS=$((RANDOM % 10 + 5))
           echo "Sleeping for $SECONDS seconds before npm test..."
           sleep $SECONDS
+
+      - name: Run tests
+        run: npm test
