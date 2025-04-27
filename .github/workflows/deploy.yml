@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
   workflow_run:
-    types: [completed]
+    types: [requested]
     workflows:
       - Build
     branches:
