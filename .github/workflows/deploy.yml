@@ -9,6 +9,10 @@ on:
         description: 'AWS Region'
         required: true
         default: 'us-west-2'
+        type: choice
+        options:
+          - 'us-west-3'
+          - 'us-east-2'
       HostFilter:
         description: "Filter pattern to filter target hostnames  (leave blank to deploy to all hosts in Environment)"
         required: false
