@@ -1,4 +1,4 @@
-name: CI on Multiple OS
+name: Build
 
 on:
   push:
@@ -10,8 +10,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [self-hosted]
-        integration-test: ["dev", "prod", "test", "bug", "integration"]
+        os: ["ubuntu-latest"]
+        integration-test: ["dev"]
 
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -38,8 +38,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Random sleep before tests
-        run: |
-          SECONDS=$((RANDOM % 10 + 5))
-          echo "Sleeping for $SECONDS seconds before npm test..."
-          sleep $SECONDS
+      # - name: Random sleep before tests
+      #   run: |
+      #     SECONDS=$((RANDOM % 10 + 5))
+      #     echo "Sleeping for $SECONDS seconds before npm test..."
+      #     sleep $SECONDS

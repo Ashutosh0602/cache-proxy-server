@@ -1,5 +1,9 @@
 on:
   workflow_dispatch:
+  # workflow_run:
+  #   types: [completed]
+  #   workflows:
+  #     - Build
 
 jobs:
   get_caller_identity:
@@ -11,7 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
-            
+
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v4
         with:
