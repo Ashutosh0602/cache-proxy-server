@@ -53,7 +53,7 @@ jobs:
 
       - name: Print token
         run: |
-          echo ${{env.GITHUB_TOKEN}}
+          echo ${{env.GITHUB_ID}}
 
       - name: Integration-test
         run: |
