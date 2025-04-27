@@ -32,6 +32,7 @@ jobs:
       - name: Random sleep before installing dependencies
         run: |
           SECONDS=$((RANDOM % 10 + 5))
+          env
           echo "Sleeping for $SECONDS seconds before npm ci..."
           sleep $SECONDS
 
