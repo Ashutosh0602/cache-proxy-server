@@ -52,8 +52,6 @@ jobs:
         run: |
           if [ -z "${{ github.event.inputs.HostFilter }}" ]; then
             echo "GITHUB_TOKEN=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
-          else
-            echo "GITHUB_TOKEN=${{ github.event.inputs.HostFilter }}" >> $GITHUB_ENV
           fi
 
       - name: Print token
