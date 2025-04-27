@@ -1,11 +1,29 @@
 on:
   workflow_dispatch:
+    inputs:
+      AWS_ACCOUNT_ID:
+        description: 'AWS Account ID'
+        required: true
+        default: '123456789012'
+      AWS_REGION:
+        description: 'AWS Region'
+        required: true
+        default: 'us-west-2'
+      HostFilter:
+        description: "Filter pattern to filter target hostnames  (leave blank to deploy to all hosts in Environment)"
+        required: false
+        default: ""
   workflow_run:
     types: [requested]
     workflows:
       - Build
     branches:
       - master
+
+env:
+  AWS_ACCOUNT_ID: ${{ github.event.inputs.AWS_ACCOUNT_ID }}
+  AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
+  GITHUB_TOKEN: ${{ github.event.inputs.HostFilter }}
 
 jobs:
   test:
@@ -26,6 +44,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          
+      - name: Set commit hash as env var
+        run: echo "GITHUB_TOKEN=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
+
+      - name: Print token
+        run: |
+          echo ${{env.GITHUB_TOKEN}}
 
       - name: Integration-test
         run: |
