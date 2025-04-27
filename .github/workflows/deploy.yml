@@ -1,28 +1,39 @@
 on:
-  workflow_dispatch:
-  # workflow_run:
-  #   types: [completed]
-  #   workflows:
-  #     - Build
+  # workflow_dispatch:
+  workflow_run:
+    types: [completed]
+    workflows:
+      - Build
 
 jobs:
-  get_caller_identity:
-    name: Deploy Site
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        integration-test: ["dev"]
+
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHub_Actions_Role
-          aws-region: us-west-2
+          node-version: 18
 
-      - name: Upload the site contents
+      - name: Integration-test
         run: |
-          echo "Hello World" > index.html
-          aws s3 cp index.html s3://oidc-ashutosh123/
+          echo "${{matrix.integration-test}}"
+
+      - name: Random sleep before installing dependencies
+        run: |
+          SECONDS=$((RANDOM % 10 + 5))
+          echo "Sleeping for $SECONDS seconds before npm ci..."
+          sleep $SECONDS
+
+      - name: Install dependencies
+        run: npm ci
