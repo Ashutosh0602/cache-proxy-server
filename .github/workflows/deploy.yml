@@ -23,7 +23,7 @@ on:
 env:
   AWS_ACCOUNT_ID: ${{ github.event.inputs.AWS_ACCOUNT_ID }}
   AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
-  GITHUB_TOKEN: ${{ github.event.inputs.HostFilter }}
+  GITHUB_ID: ${{ github.event.inputs.HostFilter }}
 
 jobs:
   test:
@@ -44,14 +44,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          
-      - name: Set commit hash as env var
-        run: echo "GITHUB_TOKEN=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
 
       - name: Set API_VERSION
         run: |
           if [ -z "${{ github.event.inputs.HostFilter }}" ]; then
-            echo "GITHUB_TOKEN=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
+            echo "GITHUB_ID=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
           fi
 
       - name: Print token
