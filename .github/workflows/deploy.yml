@@ -1,9 +1,11 @@
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   workflow_run:
     types: [completed]
     workflows:
       - Build
+    branches:
+      - deploy
 
 jobs:
   test:
