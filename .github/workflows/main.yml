@@ -40,6 +40,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Call Promote Workflow
+        uses: ./.github/workflows/promote.yml
+        with:
+          version: ${{ env.VER_REL }}
       # - name: Random sleep before tests
       #   run: |
       #     SECONDS=$((RANDOM % 10 + 5))
