@@ -3,41 +3,12 @@ name: Build
 on:
   push:
     branches:
-      - "**"
+      - main
 
 jobs:
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["ubuntu-latest"]
-        integration-test: ["dev"]
-
-    name: Test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Integration-test
-        run: |
-          echo "${{matrix.integration-test}}"
-
-      - name: Random sleep before installing dependencies
-        run: |
-          SECONDS=$((RANDOM % 10 + 5))
-          echo "Sleeping for $SECONDS seconds before npm ci..."
-          sleep $SECONDS
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Set Version
         run: echo "VER_REL=1.0-${{ github.run_number }}" >> $GITHUB_ENV
 
@@ -45,8 +16,3 @@ jobs:
         uses: ./.github/workflows/deploy.yml
         with:
           version: ${{ env.VER_REL }}
-      # - name: Random sleep before tests
-      #   run: |
-      #     SECONDS=$((RANDOM % 10 + 5))
-      #     echo "Sleeping for $SECONDS seconds before npm test..."
-      #     sleep $SECONDS
