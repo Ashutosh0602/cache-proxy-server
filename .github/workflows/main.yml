@@ -1,11 +1,9 @@
 name: Build
 
 on:
-  workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string
+  push:
+    branches:
+      - "**"
 
 jobs:
   test:
@@ -41,7 +39,7 @@ jobs:
         run: npm ci
 
       - name: Call Promote Workflow
-        uses: ./.github/workflows/promote.yml
+        uses: ./.github/workflows/deploy.yml
         with:
           version: ${{ env.VER_REL }}
       # - name: Random sleep before tests
