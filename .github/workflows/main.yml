@@ -1,9 +1,11 @@
 name: Build
 
 on:
-  repository_dispatch:
-    types: [promote-rpm]
-      
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 jobs:
   test:
