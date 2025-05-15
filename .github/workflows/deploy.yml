@@ -1,3 +1,4 @@
+name: Deploy
 on:
   workflow_dispatch:
     inputs:
@@ -65,3 +66,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set Version
+        run: echo "VER_REL=1.0-${{ github.run_number }}" >> $GITHUB_ENV
