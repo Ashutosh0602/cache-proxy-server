@@ -1,9 +1,9 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - "**"
+  repository_dispatch:
+    types: [promote-rpm]
+      
 
 jobs:
   test:
