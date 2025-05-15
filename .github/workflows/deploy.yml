@@ -25,6 +25,12 @@ on:
     branches:
       - master
 
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
 env:
   AWS_ACCOUNT_ID: ${{ github.event.inputs.AWS_ACCOUNT_ID }}
   AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
