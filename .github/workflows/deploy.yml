@@ -1,77 +1,16 @@
 name: Deploy
-on:
-  workflow_dispatch:
-    inputs:
-      AWS_ACCOUNT_ID:
-        description: 'AWS Account ID'
-        required: true
-        default: '123456789012'
-      AWS_REGION:
-        description: 'AWS Region'
-        required: true
-        default: 'us-west-2'
-        type: choice
-        options:
-          - 'us-west-3'
-          - 'us-east-2'
-      HostFilter:
-        description: "Filter pattern to filter target hostnames  (leave blank to deploy to all hosts in Environment)"
-        required: false
-        default: ""
-  workflow_run:
-    types: [requested]
-    workflows:
-      - Build
-    branches:
-      - master
 
+on:
   workflow_call:
     inputs:
       version:
         required: true
         type: string
 
-env:
-  AWS_ACCOUNT_ID: ${{ github.event.inputs.AWS_ACCOUNT_ID }}
-  AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
-  GITHUB_ID: ${{ github.event.inputs.HostFilter }}
-
 jobs:
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["ubuntu-latest"]
-        integration-test: ["dev"]
-
-    name: Test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
+  promote:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Set API_VERSION
-        run: |
-          if [ -z "${{ github.event.inputs.HostFilter }}" ]; then
-            echo "GITHUB_ID=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
-          fi
-
-      - name: Print token
-        run: |
-          echo ${{env.GITHUB_ID}}
-
-      - name: Integration-test
-        run: |
-          echo "${{matrix.integration-test}}"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Set Version
-        run: echo "VER_REL=1.0-${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Echo Version
+        run: echo "Promoting version: ${{ inputs.version }}"
+        
