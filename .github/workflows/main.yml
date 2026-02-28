@@ -1,15 +1,91 @@
-# .github/workflows/caller-workflow.yml
-name: Caller Workflow
+name: Demo - Deploy and Promote
+
+# HOW TO TEST:
+# 1. Create an Environment named "prod" in your dummy repo:
+#    Settings → Environments → New environment → name it "prod"
+# 2. Add yourself as a Required reviewer on that environment
+# 3. Run this workflow via Actions → Run workflow
+# 4. Watch job 1 complete, then job 2 will pause waiting for your approval
+# 5. Click "Review deployments" → Approve → job 2 continues
 
 on:
-  push:
-    branches:
-      - "**"
+  workflow_dispatch:
+    inputs:
+      target_env:
+        description: "Environment to deploy to first"
+        required: true
+        default: "test"
+        type: choice
+        options:
+          - "test"
+          - "staging"
+
+run-name: "Deploy → ${{ inputs.target_env }} → prod | actor: ${{ github.actor }}"
 
 jobs:
-  call-reusable:
-    uses: ./.github/workflows/deploy.yml
-    with:
-      username: "Ashutosh"
-    secrets:
-      ACCESS_TOKEN: "asdhfoaiusdfhoa"
+  build-and-deploy-test:
+    name: "Build & Deploy to ${{ inputs.target_env }}"
+    runs-on: ubuntu-latest
+
+    outputs:
+      artifact_id: ${{ steps.publish.outputs.artifact_id }}
+
+    steps:
+      - name: Simulate Build
+        run: |
+          echo "Building application..."
+          echo "Commit: ${{ github.sha }}"
+          sleep 2
+          echo "Build complete ✅"
+
+      - name: Simulate Publish Artifact
+        id: publish
+        run: |
+          # Simulate an artifact ID being returned (e.g. from Katana)
+          ARTIFACT_ID=$((RANDOM % 9000 + 1000))
+          echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
+          echo "Published artifact: $ARTIFACT_ID ✅"
+
+      - name: Simulate Deploy to ${{ inputs.target_env }}
+        run: |
+          echo "Deploying artifact ${{ steps.publish.outputs.artifact_id }} to ${{ inputs.target_env }}..."
+          sleep 2
+          echo "Deployed to ${{ inputs.target_env }} ✅"
+
+      - name: Summary
+        run: |
+          {
+            printf '## ✅ Deployed to ${{ inputs.target_env }}\n\n'
+            printf '> ⏳ **Waiting for approval to promote to prod** — check the pending job below.\n\n'
+            printf '| Field | Value |\n'
+            printf '|---|---|\n'
+            printf "| **Artifact ID** | \`${{ steps.publish.outputs.artifact_id }}\` |\n"
+            printf "| **Branch** | \`${{ github.ref_name }}\` |\n"
+            printf "| **Commit** | \`${{ github.sha }}\` |\n"
+          } >> $GITHUB_STEP_SUMMARY
+
+  # This job pauses until a required reviewer approves.
+  # The artifact_id flows automatically — no copy-pasting needed.
+  promote-prod:
+    name: "Promote artifact ${{ needs.build-and-deploy-test.outputs.artifact_id }} to prod"
+    needs: [build-and-deploy-test]
+    runs-on: ubuntu-latest
+    environment: prod  # <-- This is what creates the approval gate
+
+    steps:
+      - name: Simulate Promote to prod
+        run: |
+          echo "Promoting artifact ${{ needs.build-and-deploy-test.outputs.artifact_id }} to prod..."
+          sleep 2
+          echo "Promoted to prod ✅"
+
+      - name: Summary
+        run: |
+          {
+            printf '## ✅ Promoted to prod\n\n'
+            printf '```\n'
+            echo "Artifact ID: ${{ needs.build-and-deploy-test.outputs.artifact_id }}"
+            echo "Approved by: ${{ github.actor }}"
+            echo "Branch: ${{ github.ref_name }}"
+            printf '```\n'
+          } >> $GITHUB_STEP_SUMMARY
